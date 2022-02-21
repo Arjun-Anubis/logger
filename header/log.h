@@ -25,7 +25,7 @@
 
 extern int LOGLEVEL;
 extern int LOG_NEWLINE;
-extern int log_fd;
+extern int LOG_FILE;
 
 void log_setlevel( int loglevel );
 
@@ -33,6 +33,8 @@ int log_std( const char * file, int line, int loglevel, const char * fmt, ...);
 int log_stdc( const char * prefix, const char * fmt, ... );
 
 int log_test(void);
+
+#define log_wl( loglevel, ...) ( log_std( __FILE__, __LINE__, loglevel, __VA_ARGS__ ) )
 
 #define log_panic(...) ( log_std( __FILE__, __LINE__, LOG_PANIC, __VA_ARGS__ ) )
 #define log_err(...) ( log_std( __FILE__, __LINE__, LOG_ERR, __VA_ARGS__ ) )

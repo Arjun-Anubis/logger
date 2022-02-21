@@ -1,7 +1,7 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-#define COLOR_BASE_ESC "\u001b"
+#define COLOR_BASE_ESC "\x1b" // \x for HEX and 1b == dec(27) is ESC in ascii
 #define COLOR_RESET COLOR_BASE_ESC "[0m"
 
 #define COLOR_RED COLOR_BASE_ESC "[31m"

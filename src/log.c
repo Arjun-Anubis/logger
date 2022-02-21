@@ -1,14 +1,15 @@
-#include <cstdlib>
+#define _GNU_SOURCE
 #include <stdarg.h>
+#include <stdlib.h>
 
 #include "colors.h"
 #include "log.h"
 
-/* logger::logger( int loglevel ) */
-/* 	:loglevel(loglevel),newline(true) */
-/* {} */
+
+/* Defaults */
 int LOGLEVEL = LOG_MAX;
 int LOG_NEWLINE = 1;
+int LOG_FILE = 1;
 
 void log_setlevel( int loglevel )
 {
@@ -17,6 +18,9 @@ void log_setlevel( int loglevel )
 }
 
 int vlog_stdc( const char * prefix, const char * format, va_list args )
+	/*
+	 * Valist LOG STanDard Custom
+	 */
 {
 	int result;
 
@@ -34,6 +38,9 @@ int vlog_stdc( const char * prefix, const char * format, va_list args )
 }
 
 int log_stdc( const char * prefix, const char * format, ...)
+	/* 
+	 * Log STanDard Custom Prefix
+	 */
 {
 	int result;
 	va_list args;
@@ -52,7 +59,14 @@ int log_stdc( const char * prefix, const char * format, ...)
 	return result;
 }
 
-int log_std( const char * file, int line_number, int loglevel, const char * format, ... )
+int log_std
+(
+	const char * file,
+   	int line_number,
+   	int loglevel,
+   	const char * format,
+   	... 
+)
 {
 	char * prefix;
 	int return_code;
@@ -73,37 +87,79 @@ int log_std( const char * file, int line_number, int loglevel, const char * form
 	{
 		case LOG_PANIC:
 			if ( LOGLEVEL >= LOG_PANIC )
-				asprintf( &prefix, prefix_fmt, time_s, file, line_number, COLOR_RED COLOR_BLINK LOG_S_PANIC COLOR_RESET );
+				asprintf
+				(
+					 &prefix,
+					 prefix_fmt, time_s,
+					 file, line_number,
+					 COLOR_RED COLOR_BLINK LOG_S_PANIC COLOR_RESET 
+				);
 			else return -1;
 			break;
 		case LOG_ERR:
 			if ( LOGLEVEL >= LOG_ERR )
-				asprintf( &prefix, prefix_fmt, time_s, file, line_number, COLOR_RED LOG_S_ERR COLOR_RESET );
+				asprintf
+				(
+					 &prefix,
+					 prefix_fmt, time_s,
+					 file, line_number,
+					 COLOR_RED LOG_S_ERR COLOR_RESET 
+				);
 			else return -1;
 			break;
 		case LOG_WARN:
 			if ( LOGLEVEL >= LOG_WARN )
-				asprintf( &prefix, prefix_fmt, time_s, file, line_number, COLOR_YELLOW LOG_S_WARN COLOR_RESET );
+				asprintf
+				(
+					 &prefix,
+					 prefix_fmt, time_s,
+					 file, line_number,
+					 COLOR_YELLOW LOG_S_WARN COLOR_RESET 
+				);
 			else return -1;
 			break;
 		case LOG_MSG:
 			if ( LOGLEVEL >= LOG_MSG )
-				asprintf( &prefix, prefix_fmt, time_s, file, line_number, COLOR_GREEN LOG_S_MSG COLOR_RESET );
+				asprintf
+				(
+					&prefix,
+					prefix_fmt, time_s,
+					file, line_number,
+					COLOR_GREEN LOG_S_MSG COLOR_RESET 
+				);
 			else return -1;
 			break;
 		case LOG_MTC:
 			if ( LOGLEVEL >= LOG_MTC )
-				asprintf( &prefix, prefix_fmt, time_s, file, line_number, COLOR_PURPLE LOG_S_MTC COLOR_RESET );
+				asprintf
+				(
+				   	&prefix,
+					prefix_fmt, time_s,
+					file, line_number,
+					COLOR_PURPLE LOG_S_MTC COLOR_RESET 
+				);
 			else return -1;
 			break;
 		case LOG_DEBUG:
 			if ( LOGLEVEL >= LOG_DEBUG )
-				asprintf( &prefix, prefix_fmt, time_s, file, line_number, COLOR_CYAN LOG_S_DEBUG COLOR_RESET );
+				asprintf
+				(
+					&prefix,
+					prefix_fmt, time_s,
+					file, line_number,
+					COLOR_CYAN LOG_S_DEBUG COLOR_RESET 
+				);
 			else return -1;
 			break;
 		case LOG_SL:
 			if ( LOGLEVEL >= LOG_SL )
-				asprintf( &prefix, prefix_fmt, time_s, file, line_number, COLOR_BLUE LOG_S_SL COLOR_RESET );
+				asprintf
+				(
+					   	&prefix,
+						prefix_fmt, time_s,
+						file, line_number,
+						COLOR_BLUE LOG_S_SL COLOR_RESET 
+				);
 			else return -1;
 			break;
 	}
@@ -114,12 +170,28 @@ int log_std( const char * file, int line_number, int loglevel, const char * form
 
 int log_test( void )
 {
-	log_panic( "Panic" );
-	log_err( "Error" );
-	log_warn( "Warning" );
-	log_msg( "Message" );
-	log_mtc( "mtc" );
-	log_debug( "Debug" );
-	log_sl( "sl" );
+	for ( LOGLEVEL = 0; LOGLEVEL <= LOG_MAX; LOGLEVEL++ )
+	{
+		printf( "Set Log Level to %d\n", LOGLEVEL );
+		log_panic( "Panic" );
+		log_err( "Error" );
+		log_warn( "Warning" );
+		log_msg( "Message" );
+		log_mtc( "mtc" );
+		log_debug( "Debug" );
+		log_sl( "sl" );
+	}
+
+	printf( "\n\n\n" );
+
+	printf( "Automated Testing\n" );
+
+	printf( "\n\n\n" );
+
+	for ( LOGLEVEL = 0; LOGLEVEL <= LOG_MAX; LOGLEVEL++ )
+		for ( int i = 0; i <= LOGLEVEL; i++ )
+			if (log_wl( i, "..." ) < 0)
+				printf( "Log errored\n" );
+
 	return 0;
 }
